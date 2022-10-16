@@ -49,7 +49,7 @@ paths:
             application/json:
               schema:
                 type: object
-                $ref: "#/components/schemas/SuccesResult"
+                $ref: "#/components/schemas/SuccesLoginResult"
               example:
                 message: "Login Success"
                 data:
@@ -60,6 +60,7 @@ paths:
                   phone: "089234324"
                   bio: "cat lovers"
                   is_active: true
+                token: "bC5jb20ifQ.TKw15NmLbSdIRwXWiu6UiMIudaCe5ecqyANNvA7YL"
         "400" :
           $ref : "#/components/responses/400"  
         '500':
@@ -641,6 +642,15 @@ components:
           type: string
         data:
           type: object
+    "SuccesLoginResult":
+      type: object
+      properties:
+        message: 
+          type: string
+        data:
+          type: object
+        token: 
+          type: string
     "SuccesArrayResult":
       type: object
       properties:
