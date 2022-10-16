@@ -234,6 +234,7 @@ paths:
           $ref : "#/components/responses/401"   
         '500':
           $ref: "#/components/responses/500"
+
   /postings :
     post :
       security:
@@ -257,6 +258,17 @@ paths:
               schema :
                 type: object
                 $ref : "#/components/schemas/PostingObject"
+              example :
+                id: 1
+                "image":
+                  imageId: 002
+                  fileName: cat.png
+                  imageUrl: www.cat.com
+                content: new my cat
+                id_user: 5
+
+
+
         "400" :
           $ref : "#/components/responses/400"
         "401" :
@@ -278,13 +290,27 @@ paths:
           examples:
             1 :
               description: "example posting id 1 "
-              value : "ini kucing yang imut "
+              value : 1
             2:
               description: "example posting id 2"
-              value : "kucing-kucingan"
+              value : 2
             3 :
               description: "example posting id 3"
-              value: "kucing marah"
+              value: 3
+        - name : id_user
+          in : query
+          schema :
+            type: object
+          examples:
+            1 :
+              description: "example user id 1 "
+              value : 1
+            2:
+              description: "example user id 2"
+              value : 2
+            3 :
+              description: "example user id 3"
+              value: 3
       responses :
         "200" :
           description: "sucses show all posting"
@@ -293,6 +319,21 @@ paths:
               schema :
                 type: object
                 $ref : "#/components/schemas/ArrayPostingObj"
+              example :
+                message: "sucses get posting"
+                data :
+                - id: 1
+                  "image":
+                    imageId: 002
+                    fileName: cat.png
+                    imageUrl: www.cat.com
+                  content: new my cat
+                  id_user: 5
+                - id: 2
+                  "image": null
+                  content: today with my cat
+                  id_user: 5
+
         "400" :
           $ref : "#/components/responses/400"
         "401" :
@@ -313,14 +354,23 @@ paths:
           required: false
           schema :
             type: object
-
+          examples:
+            1 :
+              description: "example posting id 1 "
+              value : 1
+            2:
+              description: "example posting id 2"
+              value : 2
+            3 :
+              description: "example posting id 3"
+              value: 3  
       requestBody :
         required: true
         content :
           multipart/from-data :
             schema :
               type: object
-              $ref : "#/components/schemas/PostingObject" 
+              $ref : "#/components/schemas/editPostingObject" 
 
       responses :
         "200" :
@@ -329,7 +379,16 @@ paths:
             multipart/from-data :
               schema :
                 type: object
-                $ref : "#/components/schemas/PostingObject"
+                $ref : "#/components/schemas/editPostingObject"
+              example :
+                message: "sucses edit posting"
+                data :
+                - "image":
+                    imageId: 002
+                    fileName: cat.png
+                    imageUrl: www.cat.com
+                  content: new my cat
+
         "500" :
           $ref : "#/components/responses/500" 
 
@@ -347,7 +406,16 @@ paths:
           required: false
           schema :
             type: object
-
+          examples:
+            1 :
+              description: "example posting id 1 "
+              value : 1
+            2:
+              description: "example posting id 2"
+              value : 2
+            3 :
+              description: "example posting id 3"
+              value: 3  
       responses :
         "200" :
           description: "sucses update posting"
@@ -365,6 +433,8 @@ paths:
                     succses : true
         "500" :
           $ref : "#/components/responses/500"
+
+
   /comments:
       get:
         security:
@@ -395,7 +465,7 @@ paths:
             examples:
               2:
                 description: "user id = 2"
-                value: 1
+                value: 2
               4:
                 description: "user id = 4"
                 value: 4
@@ -574,14 +644,16 @@ components:
         "phone":
           type: string
         "bio":
-          type: string         
+          type: string  
+
+
     "PostingObject":
       type: object
       properties:
         "id":
           type: integer
-        "photos":
-          type: object
+        "image":
+          type: array
           properties:
             imageId:
               type: integer
@@ -594,6 +666,24 @@ components:
           type: string
         "id_user":
           type: integer
+
+    "editPostingObject":
+      type: object
+      properties:
+        "image":
+          type: array
+          properties:
+            imageId:
+              type: integer
+            imageUrl:
+              type: string
+            fileName:
+              type: string
+              format: binary
+        "content":
+          type: string
+
+
     "CommentObject":
       type: object
       properties:
