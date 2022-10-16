@@ -23,134 +23,6 @@ tags:
     description: API mengelola fitur komentar
 
 paths:
-  /user:
-    get:
-
-      summary: "User Data"
-      tags:
-      - "User"
-      parameters:
-        - name: id_User
-          in: query
-          description: "get user"
-          required: false
-          schema:
-           type: object
-          example:
-            id: "1"
-            email: "cecep@gmail.com"
-            password: "123"
-            name: "cecep"
-            phone: "089234324"
-            bio: "serbian cat lovers"
-            is_active: true
-      responses:
-        "200":
-          description: "Success Get Data"
-          content:
-            application/json:
-              schema:
-                type: object
-              example:
-                id: "1"
-                email: "cecep@gmail.com"
-                password: "123"
-                name: "cecep"
-                phone: "089234324"
-                bio: "serbian cat lovers"
-                is_active: true              
-        "400" :
-          $ref : "#/components/responses/400"
-        "401" :
-          $ref : "#/components/responses/401"
-        "500" :
-          $ref : "#/components/responses/500"
-    post:
-      summary: "Insert Data User"
-      tags:
-      - "User"
-      requestBody:
-        required: true
-        content:
-          "application/json":
-             schema:
-                type: object
-                $ref: "#/components/schemas/InsertUserObject"
-             example:
-              email: "cecep@gmail.com"
-              password: "123"
-              name: "cecep"
-              phone: "089234324"
-              bio: "serbian cat lovers"
-              is_active: true
-      responses:
-        "201":
-          description: "succes create data"
-          content:
-            application/json:
-              schema:
-                type: object
-                $ref: "#/components/schemas/UserObject"
-              example:
-                message: "User successfully created"
-                data:
-                  id: 1
-                  email: "cecep@gmail.com"
-                  password: "123"
-                  name: "cecep"
-                  phone: "089234324"
-                  bio: "serbian cat lovers"
-                  is_active: true
-        "400" :
-          $ref : "#/components/responses/400"
-        "401" :
-          $ref : "#/components/responses/401"
-        '500':
-          $ref: "#/components/responses/500"
-    put: 
-      tags:
-        - "User"
-      requestBody:
-        description: "Update user data"
-        required: true
-        content:
-          "application/json":
-            schema:
-              type: object
-              $ref: "#/components/schemas/UserObject"
-              example:
-                message: "User successfully created"
-                data:
-                  id: 1
-                  email: "cecep@gmail.com"
-                  password: "123"
-                  name: "boris"
-                  phone: "089234324"
-                  bio: "cat lovers"
-                  is_active: true
-      responses:
-        '200':
-          description: "success update data"
-          content:
-            "application/json":
-              schema:
-                $ref: "#/components/schemas/UserObject"
-              example:
-                message: "success update data"
-                data:
-                  id: 1
-                  email: "cecep@gmail.com"
-                  password: "123"
-                  name: "boris"
-                  phone: "089234324"
-                  bio: "cat lovers"
-                  is_active: true
-        "400" :
-          $ref : "#/components/responses/400"
-        "401" :
-          $ref : "#/components/responses/401"           
-        '500':
-          $ref: "#/components/responses/500"
   /login:
     post:
       summary: "Login User"
@@ -181,6 +53,7 @@ paths:
               example:
                 message: "Login Success"
                 data:
+                  id: 1
                   email: "cecep@gmail.com"
                   password: "123"
                   name: "cecep"
@@ -188,32 +61,154 @@ paths:
                   bio: "cat lovers"
                   is_active: true
         "400" :
-          $ref : "#/components/responses/400"
-        "401" :
-          $ref : "#/components/responses/401"   
+          $ref : "#/components/responses/400"  
         '500':
           $ref: "#/components/responses/500"
-
-    delete:
+  /user:
+    get:
+      security:
+        - bearerAuth: []    
+      summary: "User Data"
+      tags:
+      - "User"
+      parameters:
+        - name: id_User
+          in: query
+          description: "get user"
+          required: false
+          schema:
+           type: object
+          example:
+            id: "1"
+      responses:
+        "200":
+          description: "Success Get Data"
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/SuccesResult"
+              example:
+                message: "User successfully created"
+                data:
+                  id: 1
+                  email: "cecep@gmail.com"
+                  password: "123"
+                  name: "cecep"
+                  phone: "089234324"
+                  bio: "serbian cat lovers"
+                  is_active: true            
+        "400" :
+          $ref : "#/components/responses/400"
+        "401" :
+          $ref : "#/components/responses/401"
+        "500" :
+          $ref : "#/components/responses/500"
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Insert Data User"
+      tags:
+      - "User"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+             schema:
+                type: object
+                $ref: "#/components/schemas/InsertUserObject"
+             example:
+              email: "cecep@gmail.com"
+              password: "123"
+              name: "cecep"
+              phone: "089234324"
+              bio: "serbian cat lovers"
+              is_active: true
+      responses:
+        "201":
+          description: "succes create data"
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/SuccesResult"
+              example:
+                message: "User successfully created"
+                data:
+                  id: 1
+                  email: "cecep@gmail.com"
+                  password: "123"
+                  name: "cecep"
+                  phone: "089234324"
+                  bio: "serbian cat lovers"
+                  is_active: true
+        "400" :
+          $ref : "#/components/responses/400"
+        "401" :
+          $ref : "#/components/responses/401"
+        '500':
+          $ref: "#/components/responses/500"
+    put: 
+      security:
+        - bearerAuth: []
+      summary: "Update Data user"
       tags:
         - "User"
       requestBody:
-        description: "Delete user data"
+        description: "Update user data"
         required: true
         content:
           "application/json":
             schema:
               type: object
               $ref: "#/components/schemas/UserObject"
+            example:
+              data:
+                id: 1
+                email: "cecep@gmail.com"
+                password: "123"
+                name: "boris"
+                phone: "089234324"
+                bio: "cat lovers"
+                is_active: true
+      responses:
+        '200':
+          description: "success update data"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/SuccesResult"
               example:
-                message: "User successfully deleted"
+                message: "success update data"
                 data:
-                  email: ""
-                  password: ""
-                  name: ""
-                  phone: ""
-                  bio: ""
-                  is_active: false
+                  id: 1
+                  email: "cecep@gmail.com"
+                  password: "123"
+                  name: "boris"
+                  phone: "089234324"
+                  bio: "cat lovers"
+                  is_active: true
+        "400" :
+          $ref : "#/components/responses/400"
+        "401" :
+          $ref : "#/components/responses/401"           
+        '500':
+          $ref: "#/components/responses/500"
+    delete:
+      security:
+        - bearerAuth: []
+      summary: "Delete User Data"
+      tags:
+        - "User"
+      parameters :
+        - name : id_user
+          in: header
+          description: "delete by id user"
+          required: false
+          schema :
+            type: object
+          example:
+            id_user: 1
       responses:
         "200":
           description: "Success"
@@ -223,8 +218,9 @@ paths:
                 type: object
                 $ref: "#/components/schemas/SuccesResult"
               example:
-                message: "Login Success"
+                message: "Delete Success"
                 data:
+                  id: 1
                   email: "cecep@gmail.com"
                   password: "123"
                   name: "cecep"
@@ -239,6 +235,8 @@ paths:
           $ref: "#/components/responses/500"
   /postings :
     post :
+      security:
+        - bearerAuth: []
       summary: "Insert posting"
       tags:
         - "Posting"
@@ -300,10 +298,76 @@ paths:
           $ref : "#/components/responses/401"
         "500" :
           $ref : "#/components/responses/500"
+  /posting/{postingsId} :
+    put :
+      security:
+        - bearerAuth: []
+      summary: "update posting by id posting"
+      tags:
+        - "Posting"
+      parameters :
+        - name : id_posting
+          in: header
+          description: "update by id posting"
+          required: false
+          schema :
+            type: object
+
+      requestBody :
+        required: true
+        content :
+          multipart/from-data :
+            schema :
+              type: object
+              $ref : "#/components/schemas/PostingObject" 
+
+      responses :
+        "200" :
+          description: "sucses update posting"
+          content:
+            multipart/from-data :
+              schema :
+                type: object
+                $ref : "#/components/schemas/PostingObject"
+        "500" :
+          $ref : "#/components/responses/500" 
+
+
+    delete :
+      security:
+        - bearerAuth: []
+      summary: "delete posting by id posting"
+      tags:
+        - "Posting"
+      parameters :
+        - name : id_posting
+          in: header
+          description: "delete by id posting"
+          required: false
+          schema :
+            type: object
+
+      responses :
+        "200" :
+          description: "sucses update posting"
+          content:
+            application/json :
+              schema :
+                type: object
+                properties:
+                  success:
+                    type: boolean
+              examples:
+                success:
+                  description: "sucsess delete posting"
+                  value :
+                    succses : true
+        "500" :
+          $ref : "#/components/responses/500"
   /comments:
       get:
         security:
-          - CommentAuth: []
+          - bearerAuth: []
         summary: "Get All Comments Data by Posting Id"
         tags:
         - "Comment"
@@ -340,9 +404,11 @@ paths:
             content:
               application/json:
                 schema:
-                  type: array
-                  $ref: "#/components/schemas/ArrCommentObject"
+                  type: object
+                  $ref: "#/components/schemas/SuccesArrayResult"
                 example:
+                  message: "Successfully get comments."
+                  data:
                   - id: 1
                     content: |
                       It's your day, kitties! Go on, snooze, snack, and zoom-zoom! 😻 #caturday #cats #cat #love #nalacat #catfood 
@@ -366,7 +432,7 @@ paths:
             $ref: "#/components/responses/500"
       post:
         security:
-          - CommentAuth: []
+          - bearerAuth: []
         summary: "Insert Comment Data" 
         tags:
           - "Comment"
@@ -405,7 +471,7 @@ paths:
             $ref: "#/components/responses/500"
       put:
         security:
-          - CommentAuth: []
+          - bearerAuth: []
         summary: "Update Comment Data"
         tags:
           - "Comment"
@@ -445,7 +511,7 @@ paths:
             $ref: "#/components/responses/500"    
       delete:
         security:
-          - CommentAuth: []
+          - bearerAuth: []
         summary: "Delete Comment Data"
         tags:
         - "Comment"
@@ -488,7 +554,7 @@ paths:
 
 components:
   securitySchemes:
-    "CommentAuth" :
+    "bearerAuth" :
       type: http
       scheme: bearer
       bearerFormat: JWT
@@ -575,6 +641,13 @@ components:
           type: string
         data:
           type: object
+    "SuccesArrayResult":
+      type: object
+      properties:
+        message: 
+          type: string
+        data:
+          type: array
   responses:
     '200':
       description: "Success Process Data"
