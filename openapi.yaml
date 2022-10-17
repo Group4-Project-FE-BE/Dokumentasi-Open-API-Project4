@@ -1,15 +1,23 @@
-openapi: 3.0.3
+openapi: 3.0.0
 info:
-  title: Sosmed Kucing
-  version: 1.0.0
   description: |
-    Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs. The passage is attributed to an unknown typesetter in the 15th century who is thought to have scrambled parts of Cicero's De Finibus Bonorum et Malorum for use in a type specimen book. It usually begins with:
-
-
+    This is a sample Petstore server.  You can find
+    out more about Swagger at
+    [http://swagger.io](http://swagger.io) or on
+    [irc.freenode.net, #swagger](http://swagger.io/irc/).
+  version: "1.0.0"
+  title: Sosmed Kucing
+  termsOfService: 'http://swagger.io/terms/'
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 servers:
-  - url: 'localhost:8000'
-    description: url belum fix
-
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/Group4-Project-FE-BE/openapi_project2_team4/1.0.0
+  - url: 'https://petstore.swagger.io/v2'
 tags:
   - name: User #login, register, lihat profile user, update profile user, delelte profile (non aktif dgn delete gorm)
     description: API mengelola fitur User  
@@ -51,12 +59,10 @@ paths:
                 data:
                   id: 1
                   email: "cecep@gmail.com"
-                  password: "123"
                   name: "cecep"
                   phone: "089234324"
                   bio: "cat lovers"
-                  is_active: true
-                token: "bC5jb20ifQ.TKw15NmLbSdIRwXWiu6UiMIudaCe5ecqyANNvA7YL"
+                  token: "bC5jb20ifQ.TKw15NmLbSdIRwXWiu6UiMIudaCe5ecqyANNvA7YL"
         "400" :
           $ref : "#/components/responses/400"  
         '500':
@@ -80,6 +86,9 @@ paths:
               email: "cecep@gmail.com"
               password: "123"
               name: "cecep"
+              phone: "089234324"
+              bio: "serbian cat lovers"
+
       responses:
         "201":
           description: "succes create data"
@@ -87,7 +96,7 @@ paths:
             application/json:
               schema:
                 type: object
-                $ref: "#/components/schemas/SuccesResult"
+                $ref: "#/components/schemas/SuccessResult"
               example:
                 message: "User successfully created"
                 data:
@@ -97,54 +106,13 @@ paths:
                   name: "cecep"
                   phone: "089234324"
                   bio: "serbian cat lovers"
-                  is_active: true
         "400" :
           $ref : "#/components/responses/400"
         "401" :
           $ref : "#/components/responses/401"
         '500':
           $ref: "#/components/responses/500"
-  /user:
-    get:
-      security:
-        - bearerAuth: []    
-      summary: "User Data"
-      tags:
-      - "User"
-      parameters:
-        - name: id_User
-          in: query
-          description: "get user"
-          required: false
-          schema:
-           type: object
-          example:
-            id: "1"
-      responses:
-        "200":
-          description: "Success Get Data"
-          content:
-            application/json:
-              schema:
-                type: object
-                $ref: "#/components/schemas/SuccesResult"
-              example:
-                message: "User successfully created"
-                data:
-                  id: 1
-                  email: "cecep@gmail.com"
-                  password: "123"
-                  name: "cecep"
-                  phone: "089234324"
-                  bio: "serbian cat lovers"
-                  is_active: true            
-        "400" :
-          $ref : "#/components/responses/400"
-        "401" :
-          $ref : "#/components/responses/401"
-        "500" :
-          $ref : "#/components/responses/500"
-    
+  /users :
     put: 
       security:
         - bearerAuth: []
@@ -158,7 +126,7 @@ paths:
           "application/json":
             schema:
               type: object
-              $ref: "#/components/schemas/editUserObject"
+              $ref: "#/components/schemas/EditUserObject"
             example:
               data:
                 email: "cecep@gmail.com"
@@ -175,7 +143,7 @@ paths:
           content:
             "application/json":
               schema:
-                $ref: "#/components/schemas/SuccesResult"
+                $ref: "#/components/schemas/SuccessResult"
               example:
                 message: "success update data"
                 data:
@@ -192,6 +160,48 @@ paths:
           $ref : "#/components/responses/401"           
         '500':
           $ref: "#/components/responses/500"
+  /users/{id}:
+    get:
+      security:
+        - bearerAuth: []    
+      summary: "User Data"
+      tags:
+      - "User"
+      parameters:
+        - name: id
+          in: path
+          description: "get user"
+          required: true
+          schema:
+           type: integer
+           minimum: 1
+          examples:
+            id: 
+              value: 1
+      responses:
+        "200":
+          description: "Success Get Data"
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/SuccessResult"
+              example:
+                message: "User successfully created"
+                data:
+                  id: 1
+                  email: "cecep@gmail.com"
+                  name: "cecep"
+                  phone: "089234324"
+                  bio: "serbian cat lovers"
+                  is_active: true            
+        "400" :
+          $ref : "#/components/responses/400"
+        "401" :
+          $ref : "#/components/responses/401"
+        "500" :
+          $ref : "#/components/responses/500"
+    
     delete:
       security:
         - bearerAuth: []
@@ -199,14 +209,16 @@ paths:
       tags:
         - "User"
       parameters :
-        - name : id_user
-          in: header
-          description: "delete by id user"
-          required: false
+        - name : id
+          in: path
+          description: "Delete by id user"
+          required: true
           schema :
-            type: object
-          example:
-            id_user: 1
+            type: integer
+            minimum: 1
+          examples:
+            id:
+              value: 1
       responses:
         "200":
           description: "Success"
@@ -214,7 +226,7 @@ paths:
             application/json:
               schema:
                 type: object
-                $ref: "#/components/schemas/SuccesResult"
+                $ref: "#/components/schemas/SuccessResult"
               example:
                 message: "Delete Success"
                 data:
@@ -233,91 +245,34 @@ paths:
           $ref: "#/components/responses/500"
 
   /postings :
-    post :
-      security:
-        - bearerAuth: []
-      summary: "Insert posting"
-      tags:
-        - "Posting"
-      requestBody :
-        required: true
-        content :
-          multipart/from-data :
-            schema :
-              type: object
-              $ref : "#/components/schemas/editPostingObject"
-
-      responses:
-        "200" :
-          description: "success posting"
-          content:
-            multipart/from-data :
-              schema :
-                type: object
-                $ref : "#/components/schemas/PostingObject"
-              example :
-                id: 1
-                "image":
-                  imageId: 002
-                  fileName: cat.png
-                  imageUrl: www.cat.com
-                content: new my cat
-                id_user: 5
-
-
-
-        "400" :
-          $ref : "#/components/responses/400"
-        "401" :
-          $ref : "#/components/responses/401"
-        "500" :
-          $ref : "#/components/responses/500"
-
     get :
-      summary: "show all posting"
+      summary: "Show All posting with login and without login "
       tags:
         - "Posting"
       parameters:
-        - name : id_posting
+        - name : get_type
           in: query
-          description: "filter get by id posting"
-          required: false
+          description: "Get Type"
+          required: true
           schema :
-            type: object
+            type: string
           examples:
-            1 :
-              description: "example posting id 1 "
-              value : 1
-            2:
-              description: "example posting id 2"
-              value : 2
-            3 :
-              description: "example posting id 3"
-              value: 3
-        - name : id_user
-          in : query
-          schema :
-            type: object
-          examples:
-            1 :
-              description: "example user id 1 "
-              value : 1
-            2:
-              description: "example user id 2"
-              value : 2
-            3 :
-              description: "example user id 3"
-              value: 3
+            "nologin" :
+              description: "Get All Without Login"
+              value : "nologin"
+            "withlogin":
+              description: "Get All With Login"
+              value : "withlogin"            
       responses :
         "200" :
-          description: "sucses show all posting"
+          description: "Show all posting without login"
           content:
             multipart/from-data :
               schema :
                 type: object
                 $ref : "#/components/schemas/ArrayPostingObj"
               example :
-                message: "sucses get posting"
+                message: "Success get postings"
                 data :
                 - id: 1
                   "image":
@@ -337,30 +292,68 @@ paths:
           $ref : "#/components/responses/401"
         "500" :
           $ref : "#/components/responses/500"
-          
-  
+
+  /postings/{id_posting}:
+    get :
+      summary: "Show 1 Posting By id"
+      tags:
+        - "Posting"
+      parameters:
+        - $ref : "#/components/parameters/ParamPathPosting"
+      responses :
+        "200" :
+          description: "Show 1 Posting by id"
+          content:
+            multipart/from-data :
+              schema :
+                type: object
+                $ref : "#/components/schemas/ArrayPostingObj"
+              example :
+                message: "Success get posting"
+                data :
+                - id: 1
+                  "image":
+                    imageId: 002
+                    fileName: cat.png
+                    imageUrl: www.cat.com
+                  content: new my cat
+                  id_user: 5
+                - id: 2
+                  "image": null
+                  content: today with my cat
+                  id_user: 5
+
+        "400" :
+          $ref : "#/components/responses/400"
+        "401" :
+          $ref : "#/components/responses/401"
+        "500" :
+          $ref : "#/components/responses/500"
+                 
     put :
       security:
         - bearerAuth: []
-      summary: "update posting by id posting"
+      summary: "Update posting by id posting"
       tags:
         - "Posting"
+      parameters:
+        - $ref: "#/components/parameters/ParamPathPosting"
       requestBody :
         required: true
         content :
           multipart/from-data :
             schema :
               type: object
-              $ref : "#/components/schemas/editPostingObject" 
+              $ref : "#/components/schemas/EditPostingObject" 
 
       responses :
         "200" :
-          description: "sucses update posting"
+          description: "Success update posting"
           content:
             multipart/from-data :
               schema :
                 type: object
-                $ref : "#/components/schemas/editPostingObject"
+                $ref : "#/components/schemas/EditPostingObject"
               example :
                 message: "sucses edit posting"
                 data :
@@ -369,34 +362,21 @@ paths:
                     fileName: cat.png
                     imageUrl: www.cat.com
                   content: new my cat
-
+        "400" :
+          $ref : "#/components/responses/400"
+        "401" :
+          $ref : "#/components/responses/401"
         "500" :
-          $ref : "#/components/responses/500" 
-
+          $ref : "#/components/responses/500"
 
     delete :
       security:
         - bearerAuth: []
-      summary: "delete posting by id posting"
+      summary: "Dlete posting by id posting"
       tags:
         - "Posting"
-      parameters :
-        - name : id_posting
-          in: header
-          description: "delete by id posting"
-          required: false
-          schema :
-            type: object
-          examples:
-            1 :
-              description: "example posting id 1 "
-              value : 1
-            2:
-              description: "example posting id 2"
-              value : 2
-            3 :
-              description: "example posting id 3"
-              value: 3  
+      parameters:
+        - $ref: "#/components/parameters/ParamPathPosting"
       responses :
         "200" :
           description: "sucses update posting"
@@ -412,6 +392,10 @@ paths:
                   description: "sucsess delete posting"
                   value :
                     succses : true
+        "400" :
+          $ref : "#/components/responses/400"
+        "401" :
+          $ref : "#/components/responses/401"
         "500" :
           $ref : "#/components/responses/500"
 
@@ -506,7 +490,7 @@ paths:
               application/json:
                 schema:
                   type: object
-                  $ref: "#/components/schemas/SuccesResult"
+                  $ref: "#/components/schemas/SuccessResult"
                 example:
                   message: "Comment successfully created."
                   data:
@@ -546,7 +530,7 @@ paths:
               application/json:
                 schema:
                   type: object
-                  $ref: "#/components/schemas/SuccesResult"
+                  $ref: "#/components/schemas/SuccessResult"
                 example:
                   message: "Comment successfully updated."
                   data:
@@ -588,7 +572,7 @@ paths:
               application/json:
                 schema:
                   type: object
-                  $ref: "#/components/schemas/SuccesResult"
+                  $ref: "#/components/schemas/SuccessResult"
                 example:
                   message: "Comment successfully updated."
                   data:
@@ -610,9 +594,43 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+  parameters:
+    "ParamPathPosting":
+      name : id_posting
+      in : path
+      description: "Id posting"
+      required: true
+      schema :
+        type: integer
+      examples:
+        1 :
+          description: "example posting id 1 "
+          value : 1
+        2:
+          description: "example posting id 2"
+          value : 2
+        3 :
+          description: "example posting id 3"
+          value: 3
   schemas:
-
-    "UserObject":
+    "GetUserObject":
+      type: object
+      properties:
+        "id":
+          type: integer
+        "email":
+          type: string
+        "name":
+          type: string
+        "phone":
+          type: string
+        "bio":
+          type: string  
+        "gender":
+          type: string  
+        "location":
+          type: string  
+    "InsertUserObject":
       type: object
       properties:
         "id":
@@ -626,9 +644,8 @@ components:
         "phone":
           type: string
         "bio":
-          type: string  
-    
-    "editUserObject":
+          type: string    
+    "EditUserObject":
       type: object
       properties:
         "email":
@@ -666,7 +683,7 @@ components:
         "id_user":
           type: integer
 
-    "editPostingObject":
+    "EditPostingObject":
       type: object
       properties:
         "image":
@@ -680,7 +697,6 @@ components:
               format: binary
         "content":
           type: string
-
 
     "CommentObject":
       type: object
@@ -702,17 +718,6 @@ components:
           type: integer
         "id_posting":
           type: string
-
-    "InsertUserObject":
-      type: object
-      properties:
-        "email":
-          type: string
-        "password":
-          type: string
-        "name":
-          type: string
-
     "ArrayPostingObj":
       type: array
       items :
@@ -720,8 +725,8 @@ components:
     "ArrCommentObject":
       type: array
       items:
-        $ref: "#/components/schemas/CommentObject"      
-    "SuccesResult":
+        $ref: "#/components/schemas/CommentObject"    
+    "SuccessResult":
       type: object
       properties:
         message: 
@@ -745,7 +750,8 @@ components:
         data:
           type: array
           items : 
-            $ref: "#/components/schemas/SuccesResult"
+            $ref: "#/components/schemas/SuccessResult"
+          
   responses:
     '200':
       description: "Success Process Data"
@@ -802,5 +808,3 @@ components:
                 type: string
           example:
             message: "Process Failed. Please check server."
-
-
