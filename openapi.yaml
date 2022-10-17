@@ -70,8 +70,6 @@ paths:
 
   /register :
     post:
-      security:
-        - bearerAuth: []
       summary: "Insert Data User"
       tags:
       - "User"
@@ -139,13 +137,13 @@ paths:
                 is_active: true
       responses:
         '200':
-          description: "success update data"
+          description: "Success update data"
           content:
             "application/json":
               schema:
                 $ref: "#/components/schemas/SuccessResult"
               example:
-                message: "success update data"
+                message: "Success update data"
                 data:
                   id: 1
                   email: "cecep@gmail.com"
@@ -170,7 +168,7 @@ paths:
       parameters:
         - name: id
           in: path
-          description: "get user"
+          description: "Id User parameter"
           required: true
           schema:
            type: integer
@@ -187,7 +185,7 @@ paths:
                 type: object
                 $ref: "#/components/schemas/SuccessResult"
               example:
-                message: "User successfully created"
+                message: "Success Get Data"
                 data:
                   id: 1
                   email: "cecep@gmail.com"
@@ -221,22 +219,14 @@ paths:
               value: 1
       responses:
         "200":
-          description: "Success"
+          description: "Success Delete Data"
           content:
             application/json:
               schema:
                 type: object
                 $ref: "#/components/schemas/SuccessResult"
               example:
-                message: "Delete Success"
-                data:
-                  id: 1
-                  email: "cecep@gmail.com"
-                  password: "123"
-                  name: "cecep"
-                  phone: "089234324"
-                  bio: "cat lovers"
-                  is_active: true
+                message: "Success Delete Data"
         "400" :
           $ref : "#/components/responses/400"
         "401" :
@@ -250,19 +240,32 @@ paths:
       tags:
         - "Posting"
       parameters:
-        - name : get_type
+        - name: offset
           in: query
-          description: "Get Type"
-          required: true
-          schema :
-            type: string
+          description: "Offset comment result"
+          required: true 
+          schema:
+            type: integer
           examples:
-            "nologin" :
-              description: "Get All Without Login"
-              value : "nologin"
-            "withlogin":
-              description: "Get All With Login"
-              value : "withlogin"            
+            20:
+              description: "Offset = 20. Show starting from index 20."
+              value: 20
+            43:
+              description: "Offset = 43. Show starting from index 43."
+              value: 43
+        - name: limit
+          in: query
+          description: "Limit comment result"
+          required: true 
+          schema:
+            type: integer
+          examples:
+            30:
+              description: "Limit = 30. Show max 30 data."
+              value: 30
+            20:
+              description: "Limit = 20. Show max 20 data."
+              value: 20          
       responses :
         "200" :
           description: "Show all posting without login"
@@ -275,6 +278,7 @@ paths:
                 message: "Success get postings"
                 data :
                 - id: 1
+                  name_user: "Jojo"
                   "image":
                     imageId: 002
                     fileName: cat.png
@@ -282,6 +286,7 @@ paths:
                   content: new my cat
                   id_user: 5
                 - id: 2
+                  name_user: "Charles"
                   "image": null
                   content: today with my cat
                   id_user: 5
@@ -292,7 +297,46 @@ paths:
           $ref : "#/components/responses/401"
         "500" :
           $ref : "#/components/responses/500"
-
+    post :
+      security:
+        - bearerAuth: []
+      summary: "Update posting by id posting"
+      tags:
+        - "Posting"
+      requestBody :
+        required: true
+        content :
+          multipart/from-data :
+            schema :
+              type: object
+              $ref : "#/components/schemas/InsertPostingObject" 
+            example:
+              name_user: "Jojo"            
+              "image":
+                imageId: 002
+                fileName: cat.png
+                imageUrl: www.cat.com
+              content: new my cat
+              id_user: 5
+      responses :
+        "200" :
+          description: "Success update posting"
+          content:
+            multipart/from-data :
+              schema :
+                type: object
+                $ref : "#/components/schemas/EditPostingObject"
+              example :
+                message: "Succes edit posting"
+                data :
+                  id: 1
+                  name_user: "Jojo"                                  
+                  "image":
+                    imageId: 002
+                    fileName: cat.png
+                    imageUrl: www.cat.com
+                  content: new my cat
+                  id_user: 5
   /postings/{id_posting}:
     get :
       summary: "Show 1 Posting By id"
@@ -312,6 +356,7 @@ paths:
                 message: "Success get posting"
                 data :
                 - id: 1
+                  name_user: "Jojo"
                   "image":
                     imageId: 002
                     fileName: cat.png
@@ -319,6 +364,7 @@ paths:
                   content: new my cat
                   id_user: 5
                 - id: 2
+                  name_user: "Jojo"                
                   "image": null
                   content: today with my cat
                   id_user: 5
@@ -345,23 +391,32 @@ paths:
             schema :
               type: object
               $ref : "#/components/schemas/EditPostingObject" 
-
+            example:
+              id: 1
+              "image":
+                imageId: 002
+                fileName: cat.png
+                imageUrl: www.cat.com
+              content: new my cat
+              id_user: 5
       responses :
         "200" :
-          description: "Success update posting"
+          description: "Update Posting by Id"
           content:
             multipart/from-data :
               schema :
                 type: object
                 $ref : "#/components/schemas/EditPostingObject"
               example :
-                message: "sucses edit posting"
+                message: "Success update posting"
                 data :
-                - "image":
+                  id: 1
+                  "image":
                     imageId: 002
                     fileName: cat.png
                     imageUrl: www.cat.com
                   content: new my cat
+                  id_user: 5
         "400" :
           $ref : "#/components/responses/400"
         "401" :
@@ -372,26 +427,21 @@ paths:
     delete :
       security:
         - bearerAuth: []
-      summary: "Dlete posting by id posting"
+      summary: "Delete posting by id posting"
       tags:
         - "Posting"
       parameters:
         - $ref: "#/components/parameters/ParamPathPosting"
       responses :
-        "200" :
-          description: "sucses update posting"
+        "200":
+          description: "Delete Posting Data"
           content:
-            application/json :
-              schema :
+            application/json:
+              schema:
                 type: object
-                properties:
-                  success:
-                    type: boolean
-              examples:
-                success:
-                  description: "sucsess delete posting"
-                  value :
-                    succses : true
+                $ref: "#/components/schemas/SuccessResult"
+              example:
+                message: "Posting successfully deleted."
         "400" :
           $ref : "#/components/responses/400"
         "401" :
@@ -399,195 +449,196 @@ paths:
         "500" :
           $ref : "#/components/responses/500"
 
-
+  /postings/{id_posting}/comments:
+    get:
+      summary: "Get All Comments Data by Posting Id."
+      description: "Get All Comments Data by Posting Id. Default Limit 25 Data. You can use offset and limit query clause."
+      tags:
+      - "Comment"
+      parameters:
+        - $ref: "#/components/parameters/ParamPathPosting"
+        - name: offset
+          in: query
+          description: "Offset comment result"
+          required: true 
+          schema:
+            type: integer
+          examples:
+            20:
+              description: "Offset = 20. Show starting from index 20."
+              value: 20
+            43:
+              description: "Offset = 43. Show starting from index 43."
+              value: 43
+        - name: limit
+          in: query
+          description: "Limit comment result"
+          required: true 
+          schema:
+            type: integer
+          examples:
+            30:
+              description: "Limit = 30. Show max 30 data."
+              value: 20
+            20:
+              description: "Limit = 20. Show max 20 data."
+              value: 20
+      responses:
+        "200":
+          description: "Success Get Data"
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/SuccesArrayResult"
+              example:
+                message: "Successfully get comments."
+                data:
+                - id: 1
+                  content: |
+                    It's your day, kitties! Go on, snooze, snack, and zoom-zoom! 😻 #caturday #cats #cat #love #nalacat #catfood 
+                  id_user: 1
+                  id_posting: 3
+                - id: 2
+                  content: |
+                    What are you going to be for Halloween ? 🎃 👻 #lovenalahalloween2022 #meow #cute #catsofinstagram 
+                  id_user: 1
+                  id_posting: 3
+                - id: 3
+                  content: |
+                    The original shark hat 😻 #shark 
+                  id_user: 1
+                  id_posting: 3
+                metadata:
+                  result_set:
+                    count: 10, #count data returned
+                    offset: 5,
+                    limit: 15, 
+                    total: 50, #total data
+        '400':
+          $ref: "#/components/responses/400"
+        '401':
+          $ref: "#/components/responses/401"
+        '500':
+          $ref: "#/components/responses/500"
   /comments:
-      get:
-        security:
-          - bearerAuth: []
-        summary: "Get All Comments Data by Posting Id"
-        tags:
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Insert Comment Data" 
+      tags:
         - "Comment"
-        parameters:
-          - name: posting_id
-            in: query
-            description: "Posting id to filter comment only for this post"
-            required: false 
+      requestBody :
+        required: true
+        content:
+          "application/json":
             schema:
-              type: object
-            examples:
-              1:
-                description: "posting id = 1"
-                value: 1
-              43:
-                description: "posting id = 43"
-                value: 43
-          - name: user_id
-            in: query
-            description: "User id to filter comment only get data of this user"
-            required: false 
-            schema:
-              type: object
-            examples:
-              2:
-                description: "user id = 2"
-                value: 2
-              4:
-                description: "user id = 4"
-                value: 4
-        responses:
-          "200":
-            description: "Success Get Data"
-            content:
-              application/json:
-                schema:
-                  type: object
-                  $ref: "#/components/schemas/SuccesArrayResult"
-                example:
-                  message: "Successfully get comments."
-                  data:
-                  - id: 1
-                    content: |
-                      It's your day, kitties! Go on, snooze, snack, and zoom-zoom! 😻 #caturday #cats #cat #love #nalacat #catfood 
-                    id_user: 1
-                    id_posting: 3
-                  - id: 2
-                    content: |
-                      What are you going to be for Halloween ? 🎃 👻 #lovenalahalloween2022 #meow #cute #catsofinstagram 
-                    id_user: 1
-                    id_posting: 3
-                  - id: 3
-                    content: |
-                      The original shark hat 😻 #shark 
-                    id_user: 1
-                    id_posting: 3
-          '400':
-            $ref: "#/components/responses/400"
-          '401':
-            $ref: "#/components/responses/401"
-          '500':
-            $ref: "#/components/responses/500"
-      post:
-        security:
-          - bearerAuth: []
-        summary: "Insert Comment Data" 
-        tags:
-          - "Comment"
-        requestBody :
-          required: true
+              $ref : "#/components/schemas/InsertCommentObject"  
+            example:
+              comment_value: |
+                It's your day, kitties! Go on, snooze, snack, and zoom-zoom! 😻 #caturday #cats #cat #love #nalacat #catfood 
+              id_user: 1
+              id_posting: 3
+      responses:
+        "201":
+          description: "Success create data"
           content:
-            "application/json":
+            application/json:
               schema:
-                $ref : "#/components/schemas/InsertCommentObject"  
+                type: object
+                $ref: "#/components/schemas/SuccessResult"
               example:
-                content: |
-                  It's your day, kitties! Go on, snooze, snack, and zoom-zoom! 😻 #caturday #cats #cat #love #nalacat #catfood 
-                id_user: 1
-                id_posting: 3
-        responses:
-          "201":
-            description: "Success create data"
-            content:
-              application/json:
-                schema:
-                  type: object
-                  $ref: "#/components/schemas/SuccessResult"
-                example:
-                  message: "Comment successfully created."
-                  data:
-                    id: 1
-                    content: |
-                      Can't wait to watch it 🔥🔥
-                    id_user: 1
-                    id_posting: 3
-          '400':
-            $ref: "#/components/responses/400"
-          '401':
-            $ref: "#/components/responses/401"
-          '500':
-            $ref: "#/components/responses/500"
-      put:
-        security:
-          - bearerAuth: []
-        summary: "Update Comment Data"
-        tags:
-          - "Comment"
-        requestBody :
-          required: true
-          content:
-            "application/json":
-              schema:
-                $ref : "#/components/schemas/CommentObject"  
-              example:
-                id: 1
-                content: |
-                  Can't wait to watch it 🔥🔥
-                id_user: 1
-                id_posting: 3              
-        responses:
-          "200":
-            description: "Success Update data"
-            content:
-              application/json:
-                schema:
-                  type: object
-                  $ref: "#/components/schemas/SuccessResult"
-                example:
-                  message: "Comment successfully updated."
-                  data:
-                    id: 1
-                    content: |
-                      Can't wait to watch it 🔥🔥
-                    id_user: 1
-                    id_posting: 3
-          '400':
-            $ref: "#/components/responses/400"
-          '401':
-            $ref: "#/components/responses/401"                    
-          '500':
-            $ref: "#/components/responses/500"    
-      delete:
-        security:
-          - bearerAuth: []
-        summary: "Delete Comment Data"
-        tags:
+                message: "Comment successfully created."
+                data:
+                  id: 1
+                  name_user: "Jojo"
+                  comment_value: |
+                    It's your day, kitties! Go on, snooze, snack, and zoom-zoom! 😻 #caturday #cats #cat #love #nalacat #catfood 
+                  id_user: 1
+                  id_posting: 3
+        '400':
+          $ref: "#/components/responses/400"
+        '401':
+          $ref: "#/components/responses/401"
+        '500':
+          $ref: "#/components/responses/500" 
+  /comments/{id_comment}:
+    put:
+      security:
+        - bearerAuth: []
+      summary: "Update Comment Data By Id"
+      tags:
         - "Comment"
-        parameters:
-          - name: comment_id
-            in: query
-            description: "Comment id to delete"
-            required: false 
+      parameters:
+        - $ref: "#/components/parameters/ParamPathPosting"
+      requestBody :
+        required: true
+        content:
+          "application/json":
             schema:
-              type: object
-            examples:
-              1:
-                description: "comment id = 1"
-                value: 1
-              43:
-                description: "comment id = 43"
-                value: 43
-        responses:
-          "200":
-            description: "Success Delete Data"
-            content:
-              application/json:
-                schema:
-                  type: object
-                  $ref: "#/components/schemas/SuccessResult"
-                example:
-                  message: "Comment successfully updated."
-                  data:
-                    id: 1
-                    content: |
-                      Can't wait to watch it 🔥🔥
-                    id_user: 1
-                    id_posting: 3
-          '400':
-            $ref: "#/components/responses/400"
-          '401':
-            $ref: "#/components/responses/401"                    
-          '500':
-            $ref: "#/components/responses/500"
-
+              $ref: "#/components/schemas/EditCommentObject"
+            example:
+              comment_value: |
+                Can't wait to watch it 🔥🔥
+      responses:
+        "200":
+          description: "Success Update data"
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/SuccessResult"
+              example:
+                message: "Comment successfully updated."
+                data:
+                  id: 1
+                  name: "jojo"
+                  comment_value: |
+                    Can't wait to watch it 🔥🔥
+                  id_user: 1
+                  id_posting: 3
+        '400':
+          $ref: "#/components/responses/400"
+        '401':
+          $ref: "#/components/responses/401"                    
+        '500':
+          $ref: "#/components/responses/500"   
+    delete:
+      security:
+        - bearerAuth: []
+      summary: "Delete Comment Data By Id"
+      tags:
+      - "Comment"
+      parameters:
+        - name: comment_id
+          in: query
+          description: "Comment id to delete"
+          required: false 
+          schema:
+            type: object
+          examples:
+            1:
+              description: "comment id = 1"
+              value: 1
+            43:
+              description: "comment id = 43"
+              value: 43
+      responses:
+        "200":
+          description: "Success Delete Data"
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/SuccessResult"
+              example:
+                message: "Comment successfully deleted."
+        '400':
+          $ref: "#/components/responses/400"
+        '401':
+          $ref: "#/components/responses/401"                    
+        '500':
+          $ref: "#/components/responses/500"
 components:
   securitySchemes:
     "bearerAuth" :
@@ -662,13 +713,13 @@ components:
           type: string
         "bio":
           type: string 
-
-
     "PostingObject":
       type: object
       properties:
         "id":
           type: integer
+        "name_user":
+          type: string
         "image":
           properties:
             imageId:
@@ -682,10 +733,29 @@ components:
           type: string
         "id_user":
           type: integer
-
+    "InsertPostingObject":
+      type: object
+      properties:
+        "name_user":
+          type: string
+        "image":
+          properties:
+            imageId:
+              type: integer
+            imageUrl:
+              type: string
+            fileName:
+              type: string
+              format: binary
+        "content":
+          type: string
+        "id_user":
+          type: integer
     "EditPostingObject":
       type: object
       properties:
+        "name_user":
+          type: string
         "image":
           properties:
             imageId:
@@ -703,7 +773,9 @@ components:
       properties:
         "id":
           type: integer
-        "content":
+        "name":
+          type: integer
+        "comment_value":
           type: string
         "id_user":
           type: integer
@@ -712,12 +784,19 @@ components:
     "InsertCommentObject":
       type: object
       properties:
-        "content":
+        "name":
+          type: string
+        "comment_value":
           type: string
         "id_user":
           type: integer
         "id_posting":
-          type: string
+          type: string  
+    "EditCommentObject":
+      type: object
+      properties:
+        "comment_value":
+          type: string    
     "ArrayPostingObj":
       type: array
       items :
