@@ -5,10 +5,6 @@ info:
   description: |
     Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs. The passage is attributed to an unknown typesetter in the 15th century who is thought to have scrambled parts of Cicero's De Finibus Bonorum et Malorum for use in a type specimen book. It usually begins with:
 
-    “Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.”
-    The purpose of lorem ipsum is to create a natural looking block of text (sentence, paragraph, page, etc.) that doesn't distract from the layout. A practice not without controversy, laying out pages with meaningless filler text can be very useful when the focus is meant to be on design, not content.
-
-    The passage experienced a surge in popularity during the 1960s when Letraset used it on their dry-transfer sheets, and again during the 90s as desktop publishers bundled the text with their software. Today it's seen all around the web; on templates, websites, and stock designs. Use our generator to get your own, or read on for the authoritative history of lorem ipsum.
 
 servers:
   - url: 'localhost:8000'
@@ -65,6 +61,49 @@ paths:
           $ref : "#/components/responses/400"  
         '500':
           $ref: "#/components/responses/500"
+
+  /register :
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Insert Data User"
+      tags:
+      - "User"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+             schema:
+                type: object
+                $ref: "#/components/schemas/InsertUserObject"
+             example:
+              email: "cecep@gmail.com"
+              password: "123"
+              name: "cecep"
+      responses:
+        "201":
+          description: "succes create data"
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/SuccesResult"
+              example:
+                message: "User successfully created"
+                data:
+                  id: 1
+                  email: "cecep@gmail.com"
+                  password: "123"
+                  name: "cecep"
+                  phone: "089234324"
+                  bio: "serbian cat lovers"
+                  is_active: true
+        "400" :
+          $ref : "#/components/responses/400"
+        "401" :
+          $ref : "#/components/responses/401"
+        '500':
+          $ref: "#/components/responses/500"
   /user:
     get:
       security:
@@ -105,50 +144,7 @@ paths:
           $ref : "#/components/responses/401"
         "500" :
           $ref : "#/components/responses/500"
-    post:
-      security:
-        - bearerAuth: []
-      summary: "Insert Data User"
-      tags:
-      - "User"
-      requestBody:
-        required: true
-        content:
-          "application/json":
-             schema:
-                type: object
-                $ref: "#/components/schemas/InsertUserObject"
-             example:
-              email: "cecep@gmail.com"
-              password: "123"
-              name: "cecep"
-              phone: "089234324"
-              bio: "serbian cat lovers"
-              is_active: true
-      responses:
-        "201":
-          description: "succes create data"
-          content:
-            application/json:
-              schema:
-                type: object
-                $ref: "#/components/schemas/SuccesResult"
-              example:
-                message: "User successfully created"
-                data:
-                  id: 1
-                  email: "cecep@gmail.com"
-                  password: "123"
-                  name: "cecep"
-                  phone: "089234324"
-                  bio: "serbian cat lovers"
-                  is_active: true
-        "400" :
-          $ref : "#/components/responses/400"
-        "401" :
-          $ref : "#/components/responses/401"
-        '500':
-          $ref: "#/components/responses/500"
+    
     put: 
       security:
         - bearerAuth: []
@@ -162,14 +158,15 @@ paths:
           "application/json":
             schema:
               type: object
-              $ref: "#/components/schemas/UserObject"
+              $ref: "#/components/schemas/editUserObject"
             example:
               data:
-                id: 1
                 email: "cecep@gmail.com"
                 password: "123"
                 name: "boris"
                 phone: "089234324"
+                gender : men
+                location : java
                 bio: "cat lovers"
                 is_active: true
       responses:
@@ -248,7 +245,7 @@ paths:
           multipart/from-data :
             schema :
               type: object
-              $ref : "#/components/schemas/PostingObject"
+              $ref : "#/components/schemas/editPostingObject"
 
       responses:
         "200" :
@@ -340,7 +337,8 @@ paths:
           $ref : "#/components/responses/401"
         "500" :
           $ref : "#/components/responses/500"
-  /posting/{postingsId} :
+          
+  
     put :
       security:
         - bearerAuth: []
@@ -630,6 +628,7 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
+
     "UserObject":
       type: object
       properties:
@@ -645,6 +644,24 @@ components:
           type: string
         "bio":
           type: string  
+    
+    "editUserObject":
+      type: object
+      properties:
+        "email":
+          type: string
+        "password":
+          type: string
+        "name":
+          type: string
+        "phone":
+          type: string
+        "gender":
+          type: string
+        "location":
+          type: string
+        "bio":
+          type: string 
 
 
     "PostingObject":
@@ -653,7 +670,6 @@ components:
         "id":
           type: integer
         "image":
-          type: array
           properties:
             imageId:
               type: integer
@@ -671,7 +687,6 @@ components:
       type: object
       properties:
         "image":
-          type: array
           properties:
             imageId:
               type: integer
@@ -704,6 +719,7 @@ components:
           type: integer
         "id_posting":
           type: string
+
     "InsertUserObject":
       type: object
       properties:
@@ -713,10 +729,7 @@ components:
           type: string
         "name":
           type: string
-        "phone":
-          type: string
-        "bio":
-          type: string
+
     "ArrayPostingObj":
       type: array
       items :
@@ -748,6 +761,8 @@ components:
           type: string
         data:
           type: array
+          items : 
+            $ref: "#/components/schemas/SuccesResult"
   responses:
     '200':
       description: "Success Process Data"
