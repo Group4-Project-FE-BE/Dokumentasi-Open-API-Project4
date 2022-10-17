@@ -126,10 +126,9 @@ paths:
                 password: "123"
                 name: "boris"
                 phone: "089234324"
-                gender : men
-                location : java
                 bio: "cat lovers"
-                is_active: true
+                gender : "male"
+                location : "Jakarta"
       responses:
         '200':
           description: "Success update data"
@@ -145,7 +144,8 @@ paths:
                   name: "boris"
                   phone: "089234324"
                   bio: "cat lovers"
-                  is_active: true
+                  gender : "male"
+                  location : "Jakarta"
         "400" :
           $ref : "#/components/responses/400"
         "401" :
