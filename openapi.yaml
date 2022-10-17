@@ -52,7 +52,6 @@ paths:
           content:
             application/json:
               schema:
-                type: object
                 $ref: "#/components/schemas/SuccesLoginResult"
               example:
                 message: "Login Success"
@@ -78,7 +77,6 @@ paths:
         content:
           "application/json":
              schema:
-                type: object
                 $ref: "#/components/schemas/InsertUserObject"
              example:
               email: "cecep@gmail.com"
@@ -93,7 +91,6 @@ paths:
           content:
             application/json:
               schema:
-                type: object
                 $ref: "#/components/schemas/SuccessResult"
               example:
                 message: "User successfully created"
@@ -122,7 +119,6 @@ paths:
         content:
           "application/json":
             schema:
-              type: object
               $ref: "#/components/schemas/EditUserObject"
             example:
               data:
@@ -180,7 +176,6 @@ paths:
           content:
             application/json:
               schema:
-                type: object
                 $ref: "#/components/schemas/SuccessResult"
               example:
                 message: "Success Get Data"
@@ -221,7 +216,6 @@ paths:
           content:
             application/json:
               schema:
-                type: object
                 $ref: "#/components/schemas/SuccessResult"
               example:
                 message: "Success Delete Data"
@@ -270,7 +264,6 @@ paths:
           content:
             multipart/from-data :
               schema :
-                type: object
                 $ref : "#/components/schemas/ArrayPostingObj"
               example :
                 message: "Success get postings"
@@ -306,7 +299,6 @@ paths:
         content :
           multipart/from-data :
             schema :
-              type: object
               $ref : "#/components/schemas/InsertPostingObject" 
             example:
               name_user: "Jojo"            
@@ -322,7 +314,6 @@ paths:
           content:
             multipart/from-data :
               schema :
-                type: object
                 $ref : "#/components/schemas/EditPostingObject"
               example :
                 message: "Succes edit posting"
@@ -348,7 +339,6 @@ paths:
           content:
             multipart/from-data :
               schema :
-                type: object
                 $ref : "#/components/schemas/ArrayPostingObj"
               example :
                 message: "Success get posting"
@@ -387,7 +377,6 @@ paths:
         content :
           multipart/from-data :
             schema :
-              type: object
               $ref : "#/components/schemas/EditPostingObject" 
             example:
               id: 1
@@ -403,7 +392,6 @@ paths:
           content:
             multipart/from-data :
               schema :
-                type: object
                 $ref : "#/components/schemas/EditPostingObject"
               example :
                 message: "Success update posting"
@@ -436,7 +424,6 @@ paths:
           content:
             application/json:
               schema:
-                type: object
                 $ref: "#/components/schemas/SuccessResult"
               example:
                 message: "Posting successfully deleted."
@@ -487,7 +474,6 @@ paths:
           content:
             application/json:
               schema:
-                type: object
                 $ref: "#/components/schemas/SuccesArrayResult"
               example:
                 message: "Successfully get comments."
@@ -543,7 +529,6 @@ paths:
           content:
             application/json:
               schema:
-                type: object
                 $ref: "#/components/schemas/SuccessResult"
               example:
                 message: "Comment successfully created."
@@ -568,7 +553,7 @@ paths:
       tags:
         - "Comment"
       parameters:
-        - $ref: "#/components/parameters/ParamPathPosting"
+        - $ref: "#/components/parameters/ParamPathComment"
       requestBody :
         required: true
         content:
@@ -584,7 +569,6 @@ paths:
           content:
             application/json:
               schema:
-                type: object
                 $ref: "#/components/schemas/SuccessResult"
               example:
                 message: "Comment successfully updated."
@@ -608,26 +592,13 @@ paths:
       tags:
       - "Comment"
       parameters:
-        - name: comment_id
-          in: query
-          description: "Comment id to delete"
-          required: false 
-          schema:
-            type: object
-          examples:
-            1:
-              description: "comment id = 1"
-              value: 1
-            43:
-              description: "comment id = 43"
-              value: 43
+        - $ref: "#/components/parameters/ParamPathComment"
       responses:
         "200":
           description: "Success Delete Data"
           content:
             application/json:
               schema:
-                type: object
                 $ref: "#/components/schemas/SuccessResult"
               example:
                 message: "Comment successfully deleted."
@@ -660,6 +631,23 @@ components:
           value : 2
         3 :
           description: "example posting id 3"
+          value: 3
+    "ParamPathComment":
+      name : id_comment
+      in : path
+      description: "Id comment"
+      required: true
+      schema :
+        type: integer
+      examples:
+        1 :
+          description: "example comment id 1 "
+          value : 1
+        2:
+          description: "example comment id 2"
+          value : 2
+        3 :
+          description: "example comment id 3"
           value: 3
   schemas:
     "GetUserObject":
@@ -827,7 +815,7 @@ components:
         data:
           type: array
           items : 
-            $ref: "#/components/schemas/SuccessResult"
+            $ref: "#/components/schemas/ArrCommentObject"
           
   responses:
     '200':
