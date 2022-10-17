@@ -345,23 +345,6 @@ paths:
       summary: "update posting by id posting"
       tags:
         - "Posting"
-      parameters :
-        - name : id_posting
-          in: header
-          description: "update by id posting"
-          required: false
-          schema :
-            type: object
-          examples:
-            1 :
-              description: "example posting id 1 "
-              value : 1
-            2:
-              description: "example posting id 2"
-              value : 2
-            3 :
-              description: "example posting id 3"
-              value: 3  
       requestBody :
         required: true
         content :
