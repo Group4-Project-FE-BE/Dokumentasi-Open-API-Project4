@@ -217,7 +217,7 @@ paths:
       parameters:
         - name: offset
           in: query
-          description: "Offset comment result"
+          description: "Offset comment result."
           required: true 
           schema:
             type: integer
