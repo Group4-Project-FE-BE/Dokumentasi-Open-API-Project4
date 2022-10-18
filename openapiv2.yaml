@@ -208,7 +208,6 @@ paths:
           $ref : "#/components/responses/401"   
         '500':
           $ref: "#/components/responses/500"
-
   /postings :
     get :
       summary: "Show All posting with login and without login "
@@ -261,7 +260,7 @@ paths:
                   name_user: "Charles"
                   image_url : "https://pawmaw.com/pawmaw/img/blog-img/1566853305-Stressed-Cat.jpg"
                   content: |
-                    My buddy Simba 16 years old. It’'s just us now since his brother Mojo 20 is gone. He is my constant companion #cats #catsofinstagram #catstagram #catsagram
+                    My buddy Simba 16 years old. It''s just us now since his brother Mojo 20 is gone. He is my constant companion #cats #catsofinstagram #catstagram #catsagram
                   id_user: 5
 
         "400" :
@@ -303,8 +302,87 @@ paths:
                   name_user: "Charles"
                   image_url : "https://pawmaw.com/pawmaw/img/blog-img/1566853305-Stressed-Cat.jpg"
                   content: |
-                    My buddy Simba 16 years old. It’'s just us now since his brother Mojo 20 is gone. He is my constant companion #cats #catsofinstagram #catstagram #catsagram
+                    My buddy Simba 16 years old. It''s just us now since his brother Mojo 20 is gone. He is my constant companion #cats #catsofinstagram #catstagram #catsagram
                   id_user: 5
+  /postings/{id_posting}/comments:
+    get:
+      summary: "Show 1 Posting And All Its Comments"
+      description: "Show 1 posting and get all comments data that relate to the posting by Posting Id. Default Limit 25 Data. You can use offset and limit query clause for show comments."
+      tags:
+      - "Posting"
+      parameters:
+        - $ref: "#/components/parameters/ParamPathPosting"
+        - name: offset
+          in: query
+          description: "Offset comment result"
+          required: true 
+          schema:
+            type: integer
+          examples:
+            20:
+              description: "Offset = 20. Show starting from index 20."
+              value: 20
+            43:
+              description: "Offset = 43. Show starting from index 43."
+              value: 43
+        - name: limit
+          in: query
+          description: "Limit comment result"
+          required: true 
+          schema:
+            type: integer
+          examples:
+            30:
+              description: "Limit = 30. Show max 30 data."
+              value: 20
+            20:
+              description: "Limit = 20. Show max 20 data."
+              value: 20
+      responses:
+        "200":
+          description: "Success Get Data"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccesArrayResult"
+              example:
+                message: "Successfully get comments."
+                data:
+                - id: 1
+                  name_user: "Jojo"
+                  image_url : "https://www.hillspet.com/content/dam/cp-sites/hills/hills-pet/en_us/exported/cat-care/images/cat-sleeping-in-yellow-cat-bed-SW.jpg"              
+                  content: |
+                    We are on vacation for 2 weeks and Louie is very missed 🥺 but we are grateful aunt @melody_lim stepped in to help take good cafe of Louie while we are away. His fav napping spot is on her study materials…. 😶 . . . . #cats #catsofinstagram #catlover #catlife #instacat #meow #kitten #catoftheday #kitty #cute #petsofinstagram #kittensofinstagram #catlove #adoptdontshop #catstagram #vancouver #rescuecat #rescuecatsofinstagram #dailyfluff #vancouvercats
+                  id_user: 5
+                  comments:
+                  - id: 1
+                    content: |
+                      It's your day, kitties! Go on, snooze, snack, and zoom-zoom! 😻 #caturday #cats #cat #love #nalacat #catfood 
+                    id_user: 1
+                    id_posting: 3
+                  - id: 2
+                    content: |
+                      What are you going to be for Halloween ? 🎃 👻 #lovenalahalloween2022 #meow #cute #catsofinstagram 
+                    id_user: 1
+                    id_posting: 3
+                  - id: 3
+                    content: |
+                      The original shark hat 😻 #shark 
+                    id_user: 1
+                    id_posting: 3
+                  metadata:
+                    result_set:
+                      count: 10, #count data returned
+                      offset: 5,
+                      limit: 15, 
+                      total: 50, #total data
+        '400':
+          $ref: "#/components/responses/400"
+        '401':
+          $ref: "#/components/responses/401"
+        '500':
+          $ref: "#/components/responses/500"
+
   /postings/{id_posting}:
     get :
       summary: "Show 1 Posting By id"
@@ -326,7 +404,7 @@ paths:
                   name_user: "Charles"
                   image_url : "https://pawmaw.com/pawmaw/img/blog-img/1566853305-Stressed-Cat.jpg"
                   content: |
-                    My buddy Simba 16 years old. It’'s just us now since his brother Mojo 20 is gone. He is my constant companion #cats #catsofinstagram #catstagram #catsagram
+                    My buddy Simba 16 years old. It''s just us now since his brother Mojo 20 is gone. He is my constant companion #cats #catsofinstagram #catstagram #catsagram
                   id_user: 5
 
         "400" :
@@ -404,78 +482,6 @@ paths:
           $ref : "#/components/responses/401"
         "500" :
           $ref : "#/components/responses/500"
-
-  /postings/{id_posting}/comments:
-    get:
-      summary: "Get All Comments Data by Posting Id."
-      description: "Get All Comments Data by Posting Id. Default Limit 25 Data. You can use offset and limit query clause."
-      tags:
-      - "Comment"
-      parameters:
-        - $ref: "#/components/parameters/ParamPathPosting"
-        - name: offset
-          in: query
-          description: "Offset comment result"
-          required: true 
-          schema:
-            type: integer
-          examples:
-            20:
-              description: "Offset = 20. Show starting from index 20."
-              value: 20
-            43:
-              description: "Offset = 43. Show starting from index 43."
-              value: 43
-        - name: limit
-          in: query
-          description: "Limit comment result"
-          required: true 
-          schema:
-            type: integer
-          examples:
-            30:
-              description: "Limit = 30. Show max 30 data."
-              value: 20
-            20:
-              description: "Limit = 20. Show max 20 data."
-              value: 20
-      responses:
-        "200":
-          description: "Success Get Data"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/SuccesArrayResult"
-              example:
-                message: "Successfully get comments."
-                data:
-                - id: 1
-                  content: |
-                    It's your day, kitties! Go on, snooze, snack, and zoom-zoom! 😻 #caturday #cats #cat #love #nalacat #catfood 
-                  id_user: 1
-                  id_posting: 3
-                - id: 2
-                  content: |
-                    What are you going to be for Halloween ? 🎃 👻 #lovenalahalloween2022 #meow #cute #catsofinstagram 
-                  id_user: 1
-                  id_posting: 3
-                - id: 3
-                  content: |
-                    The original shark hat 😻 #shark 
-                  id_user: 1
-                  id_posting: 3
-                metadata:
-                  result_set:
-                    count: 10, #count data returned
-                    offset: 5,
-                    limit: 15, 
-                    total: 50, #total data
-        '400':
-          $ref: "#/components/responses/400"
-        '401':
-          $ref: "#/components/responses/401"
-        '500':
-          $ref: "#/components/responses/500"
   /comments:
     post:
       security:
