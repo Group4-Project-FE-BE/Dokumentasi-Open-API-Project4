@@ -82,12 +82,9 @@ paths:
               email: "cecep@gmail.com"
               password: "123"
               name: "cecep"
-              phone: "089234324"
-              bio: "serbian cat lovers"
-
       responses:
         "201":
-          description: "succes create data"
+          description: "Success create data"
           content:
             application/json:
               schema:
@@ -98,8 +95,6 @@ paths:
                   id: 1
                   email: "cecep@gmail.com"
                   name: "cecep"
-                  phone: "089234324"
-                  bio: "serbian cat lovers"
         "400" :
           $ref : "#/components/responses/400"
         "401" :
@@ -152,7 +147,7 @@ paths:
           $ref : "#/components/responses/401"           
         '500':
           $ref: "#/components/responses/500"
-  /users/{id}:
+  /users/{email}:
     get:
       security:
         - bearerAuth: []    
@@ -160,16 +155,15 @@ paths:
       tags:
       - "User"
       parameters:
-        - name: id
+        - name: email
           in: path
-          description: "Id User parameter"
+          description: "Email parameter"
           required: true
           schema:
-           type: integer
-           minimum: 1
+           type: string
           examples:
-            id: 
-              value: 1
+            email: 
+              value: "cecep@gmail.com"
       responses:
         "200":
           description: "Success Get Data"
@@ -199,17 +193,6 @@ paths:
       summary: "Delete User Data"
       tags:
         - "User"
-      parameters :
-        - name : id
-          in: path
-          description: "Delete by id user"
-          required: true
-          schema :
-            type: integer
-            minimum: 1
-          examples:
-            id:
-              value: 1
       responses:
         "200":
           description: "Success Delete Data"
@@ -291,7 +274,7 @@ paths:
     post :
       security:
         - bearerAuth: []
-      summary: "Update posting by id posting"
+      summary: "Insert posting by id posting"
       tags:
         - "Posting"
       requestBody :
@@ -309,7 +292,7 @@ paths:
               content: new my cat
               id_user: 5
       responses :
-        "200" :
+        "201" :
           description: "Success update posting"
           content:
             multipart/from-data :
