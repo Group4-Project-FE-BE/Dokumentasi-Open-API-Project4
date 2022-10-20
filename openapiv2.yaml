@@ -147,6 +147,46 @@ paths:
           $ref : "#/components/responses/401"           
         '500':
           $ref: "#/components/responses/500"
+    get:
+      security:
+        - bearerAuth: []    
+      summary: "Get Users Data"
+      tags:
+      - "User"
+      responses:
+        "200":
+          description: "Success Get Data"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccesArrayResult"
+              example:
+                message: "Success Get Data"
+                data:
+                - id: 1
+                  email: "Bondan@gmail.com"
+                  name: "Bondan"
+                  phone: "089234324"
+                  bio: "serbian cat lovers"
+                  is_active: true            
+                - id: 2
+                  email: "Susi@gmail.com"
+                  name: "Susi"
+                  phone: "089234324"
+                  bio: "serbian cat lovers"
+                  is_active: true            
+                - id: 3
+                  email: "Jiah@gmail.com"
+                  name: "Jiah"
+                  phone: "089234324"
+                  bio: "serbian cat lovers"
+                  is_active: true            
+        "400" :
+          $ref : "#/components/responses/400"
+        "401" :
+          $ref : "#/components/responses/401"
+        "500" :
+          $ref : "#/components/responses/500"
   /users/{email}:
     get:
       security:
@@ -272,7 +312,7 @@ paths:
     post :
       security:
         - bearerAuth: []
-      summary: "Insert posting by id posting"
+      summary: "Insert posting"
       tags:
         - "Posting"
       requestBody :
@@ -282,15 +322,16 @@ paths:
             schema :
               $ref : "#/components/schemas/InsertPostingObject" 
             example:          
-              "image":
-                imageId: 2
-                fileName: cat.png
-                imageUrl: "https://pawmaw.com/pawmaw/img/blog-img/1566853305-Stressed-Cat.jpg"
+              image_url: "https://pawmaw.com/pawmaw/img/blog-img/1566853305-Stressed-Cat.jpg"
+              # "image":
+              #   imageId: 2
+              #   fileName: cat.png
+              #   imageUrl: "https://pawmaw.com/pawmaw/img/blog-img/1566853305-Stressed-Cat.jpg"
               content: |
                 My buddy Simba 16 years old. Iti's just us now since his brother Mojo 20 is gone. He is my constant companion #cats #catsofinstagram #catstagram #catsagram
       responses :
         "201" :
-          description: "Success update posting"
+          description: "Success insert posting"
           content:
             application/json :
               schema :
@@ -417,7 +458,7 @@ paths:
     put :
       security:
         - bearerAuth: []
-      summary: "Update posting by id posting"
+      summary: "Update posting"
       tags:
         - "Posting"
       parameters:
@@ -430,15 +471,16 @@ paths:
               $ref : "#/components/schemas/EditPostingObject" 
             example:
               - id: 2
-                "image":
-                  imageId: 2
-                  fileName: cat.png
-                  imageUrl: "https://pawmaw.com/pawmaw/img/blog-img/1566853305-Stressed-Cat.jpg"
+                image_url: "https://pawmaw.com/pawmaw/img/blog-img/1566853305-Stressed-Cat.jpg"
+                # "image":
+                #   imageId: 2
+                #   fileName: cat.png
+                #   imageUrl: "https://pawmaw.com/pawmaw/img/blog-img/1566853305-Stressed-Cat.jpg"
                 content: |
                   My buddy Simba 16 years old. Iti's just us now since his brother Mojo 20 is gone. He is my constant companion #cats #catsofinstagram #catstagram #catsagram                  
       responses :
         "200" :
-          description: "Update Posting by Id"
+          description: "Update Posting"
           content:
             application/json :
               schema :
@@ -644,6 +686,10 @@ components:
           type: string  
         "location":
           type: string  
+    "ArrayUserObj":
+      type: array
+      items :
+        $ref: "#/components/schemas/GetUserObject"
     "InsertUserObject":
       type: object
       properties:
