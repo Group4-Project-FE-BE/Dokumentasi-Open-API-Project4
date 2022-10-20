@@ -233,6 +233,16 @@ paths:
       summary: "Delete User Data"
       tags:
         - "User"
+      parameters:
+        - name: email
+          in: path
+          description: "Email parameter"
+          required: true
+          schema:
+           type: string
+          examples:
+            email: 
+              value: "cecep@gmail.com"
       responses:
         "200":
           description: "Success Delete Data"
